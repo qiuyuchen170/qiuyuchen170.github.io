@@ -1,0 +1,164 @@
+<html>
+
+<head>
+    <style>
+        .button {
+            display: inline-block;
+            border-radius: 4px;
+            background-color: #f4511e;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+
+        .button2 {
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
+    <style>
+        .kun {
+            display: none;
+            position: fixed;
+        }
+
+        img {
+            -webkit-user-drag: none;
+        }
+
+        .chick {
+            display: none;
+            position: fixed;
+        }
+    </style>
+    <title>ikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikun</title>
+</head>
+
+<body>
+    <div id="b"><button onclick="game()" class="button">开始游戏</button></div>
+    <div id="sc" style="text-align: center;position: fixed;font-size: 100px;color: grey;"></div>
+    <embed src="" hidden="true" id="music" autostart=true></embed>
+    <div style="position: fixed;height: 100%;width: 100%;" id="main">
+        <div class="kun" id="1"><button onclick="boom(1)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="2"><button onclick="boom(2)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="3"><button onclick="boom(3)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="4"><button onclick="boom(4)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="5"><button onclick="boom(5)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="6"><button onclick="boom(6)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="7"><button onclick="boom(7)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="8"><button onclick="boom(8)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="9"><button onclick="boom(9)" class="button2"><img src="kun.png" /></button></div>
+        <div class="kun" id="10"><button onclick="boom(10)" class="button2"><img src="kun.png" /></button></div>
+        <div class="chick" id="11" style="bottom:0px;"><button onclick="chick(11)" class="button2"><img src="chick.webp"
+                    style="width: 100px;height: 100px;" /></button></div>
+        <div class="chick" id="12" style="bottom:0px;"><button onclick="chick(12)" class="button2"><img src="chick.webp"
+                    style="width: 100px;height: 100px;" /></button></div>
+        <div class="chick" id="13" style="bottom:0px;"><button onclick="chick(13)" class="button2"><img src="chick.webp"
+                    style="width: 100px;height: 100px;" /></button></div>
+    </div>
+</body>
+<script>
+    var score = 0;
+    //移动鲲鲲
+    var int = setInterval(function () {
+        var k = document.getElementsByClassName("kun");
+        for (var i = 0; i < k.length; i++) {
+            k[i].style.top = ((parseFloat(k[i].style.top) + 0.1) + "%");
+            if (parseFloat(k[i].style.top) + 0.1 >= 100) {
+                k[i].style.top = "0%";
+            }
+        }
+    }, 1);
+    //移动鸡
+    var int2 = setInterval(function () {
+        var c = document.getElementsByClassName("chick");
+        for (var i = 0; i < c.length; i++) {
+            c[i].style.left = ((parseFloat(c[i].style.left) + 0.05) + "%");
+            if (parseFloat(c[i].style.left) + 0.01 >= 100) {
+                c[i].style.left = "0%";
+            }
+        }
+    }, 1);
+    //主游戏
+    function game() {
+        document.getElementById("b").innerHTML = "";
+        setkun();
+        setchick();
+    }
+    //放置鲲鲲
+    function setkun() {
+        var kk = document.getElementsByClassName("kun");
+        for (var i = 0; i < kk.length; i++) {
+            kk[i].style.display = "block";
+            kk[i].style.top = Math.floor(Math.random() * (101)).toString() + "%";
+            kk[i].style.left = Math.floor(Math.random() * (101)).toString() + "%";
+        };
+    }
+    //放置鸡
+    function setchick() {
+        var cc = document.getElementsByClassName("chick");
+        for (var i = 0; i < cc.length; i++) {
+            cc[i].style.display = "block";
+            cc[i].style.left = Math.floor(Math.random() * (101)).toString() + "%";
+        };
+    }
+    //你干嘛
+    function boom(id) {
+        score += 10;
+        var music = document.getElementById("music");
+        music.src = "";
+        music.src = "你干嘛.mp3";
+        var k = document.getElementById(id.toString());
+        k.style.top = Math.floor(Math.random() * (101)).toString() + "%";
+        k.style.left = Math.floor(Math.random() * (101)).toString() + "%";
+    }
+    //计分功能
+    var count = setInterval(function () {
+        var sc = document.getElementById("sc");
+        sc.innerHTML = "<p>SCORE:" + score.toString() + "</p>";
+    }, 1);
+    //鸡你太美
+    function chick(id) {
+        score += 100;
+        var music = document.getElementById("music");
+        music.src = "";
+        music.src = "鸡你太美.mp3";
+    }
+</script>
+
+</html>
