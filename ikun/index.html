@@ -66,6 +66,7 @@
             position: fixed;
         }
     </style>
+    <script src="../js/jquery.slim.min.js"></script>
     <title>ikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikunikun</title>
 </head>
 
@@ -90,6 +91,17 @@
                     style="width: 100px;height: 100px;" /></button></div>
         <div class="chick" id="13" style="bottom:0px;"><button onclick="chick(13)" class="button2"><img src="chick.webp"
                     style="width: 100px;height: 100px;" /></button></div>
+        <!--作弊按钮-->
+        <div style="bottom: 0px;right: 0px;position:fixed;">
+            <form>
+                直接获得分数:
+                <input type="text" name="score" id="cheat-score" placeholder="有一个小彩蛋，试一下一个数字（懂的都懂）" style="width:200px;">
+                <input type="radio" name="way" value="add" checked id="cheat-add">增加
+                <input type="radio" name="way" value="change" id="cheat-change">修改
+                <button type="button" onclick="cheat()">提交</button>
+            </form>
+        </div>
+
     </div>
 </body>
 <script>
@@ -147,17 +159,26 @@
         k.style.top = Math.floor(Math.random() * (101)).toString() + "%";
         k.style.left = Math.floor(Math.random() * (101)).toString() + "%";
     }
-    //计分功能
-    var count = setInterval(function () {
-        var sc = document.getElementById("sc");
-        sc.innerHTML = "<p>SCORE:" + score.toString() + "</p>";
-    }, 1);
     //鸡你太美
     function chick(id) {
         score += 100;
         var music = document.getElementById("music");
         music.src = "";
         music.src = "鸡你太美.mp3";
+    }
+    //计分功能
+    var count = setInterval(function () {
+        var sc = document.getElementById("sc");
+        sc.innerHTML = "<p>SCORE:" + score.toString() + "</p>";
+        //一个小彩蛋
+        if (score == 114514) {
+            window.location.replace(".\\caidan.html");
+        }
+    }, 1);
+    //作弊功能
+    function cheat() {
+        if (document.getElementsByName("way")[0].checked) score += parseInt($("#cheat-score").val());
+        if (document.getElementsByName("way")[1].checked) score = parseInt($("#cheat-score").val());
     }
 </script>
 
