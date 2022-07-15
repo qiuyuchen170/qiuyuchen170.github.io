@@ -73,7 +73,12 @@
 <body>
     <div id="b"><button onclick="game()" class="button">开始游戏</button></div>
     <div id="sc" style="text-align: center;position: fixed;font-size: 100px;color: grey;"></div>
-    <embed src="" hidden="true" id="music" autostart=true></embed>
+    <div id="player">
+
+    </div>
+    <audio id="audio">
+        <source src="你干嘛.mp3" id="music" type="audio/mpeg" />
+    </audio>
     <div style="position: fixed;height: 100%;width: 100%;" id="main">
         <div class="kun" id="1"><button onclick="boom(1)" class="button2"><img src="kun.png" /></button></div>
         <div class="kun" id="2"><button onclick="boom(2)" class="button2"><img src="kun.png" /></button></div>
@@ -152,9 +157,9 @@
     //你干嘛
     function boom(id) {
         score += 10;
-        var music = document.getElementById("music");
-        music.src = "";
-        music.src = "你干嘛.mp3";
+        document.getElementById("player").innerHTML='';
+        document.getElementById("player").innerHTML='<audio id="audio"><source src="你干嘛.mp3" id="music" type="audio/mpeg" /></audio>';
+        document.getElementById("audio").play();
         var k = document.getElementById(id.toString());
         k.style.top = Math.floor(Math.random() * (101)).toString() + "%";
         k.style.left = Math.floor(Math.random() * (101)).toString() + "%";
@@ -163,8 +168,9 @@
     function chick(id) {
         score += 100;
         var music = document.getElementById("music");
-        music.src = "";
-        music.src = "鸡你太美.mp3";
+        document.getElementById("player").innerHTML='';
+        document.getElementById("player").innerHTML='<audio id="audio"><source src="鸡你太美.mp3" id="music" type="audio/mpeg" /></audio>';
+        document.getElementById("audio").play();
     }
     //计分功能
     var count = setInterval(function () {
