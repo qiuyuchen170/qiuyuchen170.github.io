@@ -100,7 +100,8 @@
         <div style="bottom: 0px;right: 0px;position:fixed;">
             <form>
                 直接获得分数:
-                <input type="text" name="score" id="cheat-score" placeholder="有一个小彩蛋，试一下一个数字（懂的都懂）" style="width:200px;">
+                <input type="text" name="score" id="cheat-score" placeholder="有一个小彩蛋，试一下一个数字（懂的都懂）"
+                    style="width:200px;">
                 <input type="radio" name="way" value="add" checked id="cheat-add">增加
                 <input type="radio" name="way" value="change" id="cheat-change">修改
                 <button type="button" onclick="cheat()">提交</button>
@@ -110,13 +111,28 @@
     </div>
 </body>
 <script>
+    //生成随机数
+    function randint(minNum, maxNum) {
+        switch (arguments.length) {
+            case 1:
+                return parseInt(Math.random() * minNum + 1, 10);
+                break;
+            case 2:
+                return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
     var score = 0;
     //移动鲲鲲
     var int = setInterval(function () {
         var k = document.getElementsByClassName("kun");
         for (var i = 0; i < k.length; i++) {
-            k[i].style.top = ((parseFloat(k[i].style.top) + 0.1) + "%");
-            if (parseFloat(k[i].style.top) + 0.1 >= 100) {
+            var speed =randint(1,50)/100;
+            k[i].style.top = ((parseFloat(k[i].style.top) + speed) + "%");
+            if (parseFloat(k[i].style.top) + speed >= 100) {
                 k[i].style.top = "0%";
             }
         }
@@ -125,8 +141,9 @@
     var int2 = setInterval(function () {
         var c = document.getElementsByClassName("chick");
         for (var i = 0; i < c.length; i++) {
-            c[i].style.left = ((parseFloat(c[i].style.left) + 0.05) + "%");
-            if (parseFloat(c[i].style.left) + 0.01 >= 100) {
+            var speed =randint(1,50)/100;
+            c[i].style.left = ((parseFloat(c[i].style.left) + speed) + "%");
+            if (parseFloat(c[i].style.left) + speed >= 100) {
                 c[i].style.left = "0%";
             }
         }
@@ -157,8 +174,9 @@
     //你干嘛
     function boom(id) {
         score += 10;
-        document.getElementById("player").innerHTML='';
-        document.getElementById("player").innerHTML='<audio id="audio"><source src="你干嘛.mp3" id="music" type="audio/mpeg" /></audio>';
+        document.getElementById("player").innerHTML = '';
+        document.getElementById("player").innerHTML =
+            '<audio id="audio"><source src="你干嘛.mp3" id="music" type="audio/mpeg" /></audio>';
         document.getElementById("audio").play();
         var k = document.getElementById(id.toString());
         k.style.top = Math.floor(Math.random() * (101)).toString() + "%";
@@ -168,8 +186,9 @@
     function chick(id) {
         score += 100;
         var music = document.getElementById("music");
-        document.getElementById("player").innerHTML='';
-        document.getElementById("player").innerHTML='<audio id="audio"><source src="鸡你太美.mp3" id="music" type="audio/mpeg" /></audio>';
+        document.getElementById("player").innerHTML = '';
+        document.getElementById("player").innerHTML =
+            '<audio id="audio"><source src="鸡你太美.mp3" id="music" type="audio/mpeg" /></audio>';
         document.getElementById("audio").play();
     }
     //计分功能
