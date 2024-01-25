@@ -1,0 +1,713 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="邱雨晨">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实现高精度整数运算的C++类在某些应用中，我们可能需要处理超出基本整数范围的大整数，例如对于极大的数值计算或密码学应用。在C++中，我们可以实现一个高精度整数类，允许我们执行大整数的基本运算。本文将介绍如何使用C++创建这样一个类，并实现加法、减法、乘法和除法。 1. 大整数类的设计我们将创建一个BigInteger类，它内部使用一个vector&lt;int&gt;来存储大整数的各个位数。以下是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在c++中实现高精度">
+<meta property="og:url" content="http://qyc233.eu.org/2023/11/27/%E5%9C%A8c-%E4%B8%AD%E5%AE%9E%E7%8E%B0%E9%AB%98%E7%B2%BE%E5%BA%A6/index.html">
+<meta property="og:site_name" content="邱雨晨的博客">
+<meta property="og:description" content="实现高精度整数运算的C++类在某些应用中，我们可能需要处理超出基本整数范围的大整数，例如对于极大的数值计算或密码学应用。在C++中，我们可以实现一个高精度整数类，允许我们执行大整数的基本运算。本文将介绍如何使用C++创建这样一个类，并实现加法、减法、乘法和除法。 1. 大整数类的设计我们将创建一个BigInteger类，它内部使用一个vector&lt;int&gt;来存储大整数的各个位数。以下是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-27T06:10:53.000Z">
+<meta property="article:modified_time" content="2023-11-27T06:35:43.441Z">
+<meta property="article:author" content="邱雨晨">
+<meta property="article:tag" content="编程|c++">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>在c++中实现高精度 - 邱雨晨的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"qyc233.eu.org","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"scroll_after_turning_page","follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>邱雨晨|乖猪的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://bing.icodeq.com') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="在c++中实现高精度"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-27 14:10" pubdate>
+          2023年11月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          66 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">在c++中实现高精度</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 个月前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="实现高精度整数运算的C-类"><a href="#实现高精度整数运算的C-类" class="headerlink" title="实现高精度整数运算的C++类"></a>实现高精度整数运算的C++类</h1><p>在某些应用中，我们可能需要处理超出基本整数范围的大整数，例如对于极大的数值计算或密码学应用。在C++中，我们可以实现一个高精度整数类，允许我们执行大整数的基本运算。本文将介绍如何使用C++创建这样一个类，并实现加法、减法、乘法和除法。</p>
+<h2 id="1-大整数类的设计"><a href="#1-大整数类的设计" class="headerlink" title="1. 大整数类的设计"></a>1. 大整数类的设计</h2><p>我们将创建一个<code>BigInteger</code>类，它内部使用一个<code>vector&lt;int&gt;</code>来存储大整数的各个位数。以下是基本设计：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdexcept&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">BigInteger</span> &#123;<br><span class="hljs-keyword">private</span>:<br>    vector&lt;<span class="hljs-type">int</span>&gt; digits;<br><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-comment">// 构造函数、打印函数等基本成员函数...</span><br><br>    <span class="hljs-comment">// 大整数加法</span><br>    BigInteger <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span>;<br><br>    <span class="hljs-comment">// 大整数减法</span><br>    BigInteger <span class="hljs-keyword">operator</span>-(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span>;<br><br>    <span class="hljs-comment">// 大整数乘法</span><br>    BigInteger <span class="hljs-keyword">operator</span>*(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span>;<br><br>    <span class="hljs-comment">// 大整数除法</span><br>    BigInteger <span class="hljs-keyword">operator</span>/(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span>;<br><br>    <span class="hljs-comment">// 比较函数、零判断函数等辅助函数...</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-构造函数和打印函数"><a href="#2-构造函数和打印函数" class="headerlink" title="2. 构造函数和打印函数"></a>2. 构造函数和打印函数</h2><p>首先，我们通过构造函数将字符串表示的数字转换为<code>BigInteger</code>对象，并提供一个打印函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">BigInteger</span>(string numStr) &#123;<br>    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">isValidNumber</span>(numStr)) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;Invalid number format&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = numStr.<span class="hljs-built_in">length</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>        digits.<span class="hljs-built_in">push_back</span>(numStr[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = digits.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>        cout &lt;&lt; digits[i];<br>    &#125;<br>    cout &lt;&lt; endl;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-加法运算"><a href="#3-加法运算" class="headerlink" title="3. 加法运算"></a>3. 加法运算</h2><p>加法运算实现了两个<code>BigInteger</code>对象之间的加法操作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp">BigInteger <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        BigInteger result;<br>        <span class="hljs-type">int</span> carry = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br><br>        <span class="hljs-keyword">while</span> (i &lt; digits.<span class="hljs-built_in">size</span>() || i &lt; other.digits.<span class="hljs-built_in">size</span>() || carry) &#123;<br>            <span class="hljs-type">int</span> sum = carry;<br>            <span class="hljs-keyword">if</span> (i &lt; digits.<span class="hljs-built_in">size</span>()) sum += digits[i];<br>            <span class="hljs-keyword">if</span> (i &lt; other.digits.<span class="hljs-built_in">size</span>()) sum += other.digits[i];<br><br>            result.digits.<span class="hljs-built_in">push_back</span>(sum % <span class="hljs-number">10</span>);<br>            carry = sum / <span class="hljs-number">10</span>;<br><br>            i++;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-减法运算"><a href="#4-减法运算" class="headerlink" title="4. 减法运算"></a>4. 减法运算</h2><p>减法运算实现了两个<code>BigInteger</code>对象之间的减法操作，并处理负数情况：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs cpp">BigInteger <span class="hljs-keyword">operator</span>-(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        <span class="hljs-keyword">if</span> (*<span class="hljs-keyword">this</span> &lt; other) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;Result is negative, subtraction not supported&quot;</span>);<br>        &#125;<br><br>        BigInteger result;<br>        <span class="hljs-type">int</span> borrow = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br><br>        <span class="hljs-keyword">while</span> (i &lt; digits.<span class="hljs-built_in">size</span>() || i &lt; other.digits.<span class="hljs-built_in">size</span>()) &#123;<br>            <span class="hljs-type">int</span> diff = borrow;<br>            <span class="hljs-keyword">if</span> (i &lt; digits.<span class="hljs-built_in">size</span>()) diff += digits[i];<br>            <span class="hljs-keyword">if</span> (i &lt; other.digits.<span class="hljs-built_in">size</span>()) diff -= other.digits[i];<br><br>            <span class="hljs-keyword">if</span> (diff &lt; <span class="hljs-number">0</span>) &#123;<br>                diff += <span class="hljs-number">10</span>;<br>                borrow = <span class="hljs-number">-1</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                borrow = <span class="hljs-number">0</span>;<br>            &#125;<br><br>            result.digits.<span class="hljs-built_in">push_back</span>(diff);<br><br>            i++;<br>        &#125;<br><br>        <span class="hljs-comment">// 移除前导零</span><br>        <span class="hljs-keyword">while</span> (!result.digits.<span class="hljs-built_in">empty</span>() &amp;&amp; result.digits.<span class="hljs-built_in">back</span>() == <span class="hljs-number">0</span>) &#123;<br>            result.digits.<span class="hljs-built_in">pop_back</span>();<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-乘法运算"><a href="#5-乘法运算" class="headerlink" title="5. 乘法运算"></a>5. 乘法运算</h2><p>乘法运算实现了两个<code>BigInteger</code>对象之间的乘法操作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs cpp">BigInteger <span class="hljs-keyword">operator</span>*(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        BigInteger result;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; digits.<span class="hljs-built_in">size</span>(); i++) &#123;<br>            <span class="hljs-type">int</span> carry = <span class="hljs-number">0</span>;<br>            BigInteger temp;<br><br>            <span class="hljs-comment">// 在乘法中，每一位和另一个数相乘，并且结果向左移动一位</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                temp.digits.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">0</span>);<br>            &#125;<br><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; other.digits.<span class="hljs-built_in">size</span>() || carry; j++) &#123;<br>                <span class="hljs-type">int</span> product = carry;<br>                <span class="hljs-keyword">if</span> (j &lt; other.digits.<span class="hljs-built_in">size</span>()) product += digits[i] * other.digits[j];<br><br>                temp.digits.<span class="hljs-built_in">push_back</span>(product % <span class="hljs-number">10</span>);<br>                carry = product / <span class="hljs-number">10</span>;<br>            &#125;<br><br>            result = result + temp;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-除法运算"><a href="#6-除法运算" class="headerlink" title="6. 除法运算"></a>6. 除法运算</h2><p>除法运算实现了两个<code>BigInteger</code>对象之间的除法操作，并处理除数为零的情况：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs cpp">BigInteger <span class="hljs-keyword">operator</span>/(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        <span class="hljs-keyword">if</span> (other.<span class="hljs-built_in">isZero</span>()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;Division by zero&quot;</span>);<br>        &#125;<br><br>        BigInteger result;<br>        BigInteger currentDividend;<br>        <span class="hljs-type">int</span> currentIndex = digits.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>;<br><br>        <span class="hljs-keyword">while</span> (currentIndex &gt;= <span class="hljs-number">0</span>) &#123;<br>            currentDividend.digits.<span class="hljs-built_in">insert</span>(currentDividend.digits.<span class="hljs-built_in">begin</span>(), digits[currentIndex]);<br><br>            <span class="hljs-type">int</span> quotient = <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">while</span> (currentDividend &gt;= other) &#123;<br>                currentDividend = currentDividend - other;<br>                quotient++;<br>            &#125;<br><br>            result.digits.<span class="hljs-built_in">insert</span>(result.digits.<span class="hljs-built_in">begin</span>(), quotient);<br><br>            currentIndex--;<br>        &#125;<br><br>        <span class="hljs-comment">// 移除前导零</span><br>        <span class="hljs-keyword">while</span> (!result.digits.<span class="hljs-built_in">empty</span>() &amp;&amp; result.digits.<span class="hljs-built_in">back</span>() == <span class="hljs-number">0</span>) &#123;<br>            result.digits.<span class="hljs-built_in">pop_back</span>();<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-其他辅助函数"><a href="#7-其他辅助函数" class="headerlink" title="7. 其他辅助函数"></a>7. 其他辅助函数</h2><p>在实际应用中，我们可能还需要其他辅助函数，比如判断是否为零、比较大小等函数。这些函数应该根据实际需要进行实现。</p>
+<h2 id="8-示例用法"><a href="#8-示例用法" class="headerlink" title="8. 示例用法"></a>8. 示例用法</h2><p>最后，我们在<code>main</code>函数中展示了<code>BigInteger</code>类的一些基本用法，包括加法、减法、乘法和除法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 示例用法</span><br>        <span class="hljs-function">BigInteger <span class="hljs-title">num1</span><span class="hljs-params">(<span class="hljs-string">&quot;12345678901234567890&quot;</span>)</span></span>;<br>        <span class="hljs-function">BigInteger <span class="hljs-title">num2</span><span class="hljs-params">(<span class="hljs-string">&quot;98765432109876543210&quot;</span>)</span></span>;<br><br>        cout &lt;&lt; <span class="hljs-string">&quot;num1: &quot;</span>;<br>        num1.<span class="hljs-built_in">print</span>();<br><br>        cout &lt;&lt; <span class="hljs-string">&quot;num2: &quot;</span>;<br>        num2.<span class="hljs-built_in">print</span>();<br><br>        BigInteger sum = num1 + num2;<br>        cout &lt;&lt; <span class="hljs-string">&quot;Sum: &quot;</span>;<br>        sum.<span class="hljs-built_in">print</span>();<br><br>        BigInteger difference = num1 - num2;<br>        cout &lt;&lt; <span class="hljs-string">&quot;Difference: &quot;</span>;<br>        difference.<span class="hljs-built_in">print</span>();<br><br>        BigInteger product = num1 * num2;<br>        cout &lt;&lt; <span class="hljs-string">&quot;Product: &quot;</span>;<br>        product.<span class="hljs-built_in">print</span>();<br><br>        BigInteger quotient = num1 / num2;<br>        cout &lt;&lt; <span class="hljs-string">&quot;Quotient: &quot;</span>;<br>        quotient.<span class="hljs-built_in">print</span>();<br>    &#125; <span class="hljs-built_in">catch</span> (<span class="hljs-type">const</span> exception &amp;e) &#123;<br>        cerr &lt;&lt; <span class="hljs-string">&quot;Error: &quot;</span> &lt;&lt; e.<span class="hljs-built_in">what</span>() &lt;&lt; endl;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>通过实现这个<code>BigInteger</code>类，我们能够在C++中处理大整数运算，从而满足一些特定应用的需求。在实际应用中，可能需要根据具体情况进行性能优化和错误处理。</p>
+<h2 id="附上完整代码："><a href="#附上完整代码：" class="headerlink" title="附上完整代码："></a>附上完整代码：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdexcept&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">BigInteger</span> &#123;<br><span class="hljs-keyword">private</span>:<br>    vector&lt;<span class="hljs-type">int</span>&gt; digits;<br><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-comment">// 构造函数，接受字符串表示的数字</span><br>    <span class="hljs-built_in">BigInteger</span>(string numStr) &#123;<br>        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">isValidNumber</span>(numStr)) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;Invalid number format&quot;</span>);<br>        &#125;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = numStr.<span class="hljs-built_in">length</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>            digits.<span class="hljs-built_in">push_back</span>(numStr[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 打印大整数</span><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = digits.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>            cout &lt;&lt; digits[i];<br>        &#125;<br>        cout &lt;&lt; endl;<br>    &#125;<br><br>    <span class="hljs-comment">// 判断输入的数字是否合法</span><br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title">isValidNumber</span><span class="hljs-params">(<span class="hljs-type">const</span> string &amp;numStr)</span> </span>&#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">char</span> digit : numStr) &#123;<br>            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">isdigit</span>(digit)) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 大整数加法</span><br>    BigInteger <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        BigInteger result;<br>        <span class="hljs-type">int</span> carry = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br><br>        <span class="hljs-keyword">while</span> (i &lt; digits.<span class="hljs-built_in">size</span>() || i &lt; other.digits.<span class="hljs-built_in">size</span>() || carry) &#123;<br>            <span class="hljs-type">int</span> sum = carry;<br>            <span class="hljs-keyword">if</span> (i &lt; digits.<span class="hljs-built_in">size</span>()) sum += digits[i];<br>            <span class="hljs-keyword">if</span> (i &lt; other.digits.<span class="hljs-built_in">size</span>()) sum += other.digits[i];<br><br>            result.digits.<span class="hljs-built_in">push_back</span>(sum % <span class="hljs-number">10</span>);<br>            carry = sum / <span class="hljs-number">10</span>;<br><br>            i++;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    <span class="hljs-comment">// 大整数减法</span><br>    BigInteger <span class="hljs-keyword">operator</span>-(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        <span class="hljs-keyword">if</span> (*<span class="hljs-keyword">this</span> &lt; other) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;Result is negative, subtraction not supported&quot;</span>);<br>        &#125;<br><br>        BigInteger result;<br>        <span class="hljs-type">int</span> borrow = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br><br>        <span class="hljs-keyword">while</span> (i &lt; digits.<span class="hljs-built_in">size</span>() || i &lt; other.digits.<span class="hljs-built_in">size</span>()) &#123;<br>            <span class="hljs-type">int</span> diff = borrow;<br>            <span class="hljs-keyword">if</span> (i &lt; digits.<span class="hljs-built_in">size</span>()) diff += digits[i];<br>            <span class="hljs-keyword">if</span> (i &lt; other.digits.<span class="hljs-built_in">size</span>()) diff -= other.digits[i];<br><br>            <span class="hljs-keyword">if</span> (diff &lt; <span class="hljs-number">0</span>) &#123;<br>                diff += <span class="hljs-number">10</span>;<br>                borrow = <span class="hljs-number">-1</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                borrow = <span class="hljs-number">0</span>;<br>            &#125;<br><br>            result.digits.<span class="hljs-built_in">push_back</span>(diff);<br><br>            i++;<br>        &#125;<br><br>        <span class="hljs-comment">// 移除前导零</span><br>        <span class="hljs-keyword">while</span> (!result.digits.<span class="hljs-built_in">empty</span>() &amp;&amp; result.digits.<span class="hljs-built_in">back</span>() == <span class="hljs-number">0</span>) &#123;<br>            result.digits.<span class="hljs-built_in">pop_back</span>();<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    <span class="hljs-comment">// 大整数乘法</span><br>    BigInteger <span class="hljs-keyword">operator</span>*(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        BigInteger result;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; digits.<span class="hljs-built_in">size</span>(); i++) &#123;<br>            <span class="hljs-type">int</span> carry = <span class="hljs-number">0</span>;<br>            BigInteger temp;<br><br>            <span class="hljs-comment">// 在乘法中，每一位和另一个数相乘，并且结果向左移动一位</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                temp.digits.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">0</span>);<br>            &#125;<br><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; other.digits.<span class="hljs-built_in">size</span>() || carry; j++) &#123;<br>                <span class="hljs-type">int</span> product = carry;<br>                <span class="hljs-keyword">if</span> (j &lt; other.digits.<span class="hljs-built_in">size</span>()) product += digits[i] * other.digits[j];<br><br>                temp.digits.<span class="hljs-built_in">push_back</span>(product % <span class="hljs-number">10</span>);<br>                carry = product / <span class="hljs-number">10</span>;<br>            &#125;<br><br>            result = result + temp;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    <span class="hljs-comment">// 大整数除法</span><br>    BigInteger <span class="hljs-keyword">operator</span>/(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        <span class="hljs-keyword">if</span> (other.<span class="hljs-built_in">isZero</span>()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;Division by zero&quot;</span>);<br>        &#125;<br><br>        BigInteger result;<br>        BigInteger currentDividend;<br>        <span class="hljs-type">int</span> currentIndex = digits.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>;<br><br>        <span class="hljs-keyword">while</span> (currentIndex &gt;= <span class="hljs-number">0</span>) &#123;<br>            currentDividend.digits.<span class="hljs-built_in">insert</span>(currentDividend.digits.<span class="hljs-built_in">begin</span>(), digits[currentIndex]);<br><br>            <span class="hljs-type">int</span> quotient = <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">while</span> (currentDividend &gt;= other) &#123;<br>                currentDividend = currentDividend - other;<br>                quotient++;<br>            &#125;<br><br>            result.digits.<span class="hljs-built_in">insert</span>(result.digits.<span class="hljs-built_in">begin</span>(), quotient);<br><br>            currentIndex--;<br>        &#125;<br><br>        <span class="hljs-comment">// 移除前导零</span><br>        <span class="hljs-keyword">while</span> (!result.digits.<span class="hljs-built_in">empty</span>() &amp;&amp; result.digits.<span class="hljs-built_in">back</span>() == <span class="hljs-number">0</span>) &#123;<br>            result.digits.<span class="hljs-built_in">pop_back</span>();<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    <span class="hljs-comment">// 判断是否为零</span><br>    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">isZero</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> digits.<span class="hljs-built_in">size</span>() == <span class="hljs-number">0</span> || (digits.<span class="hljs-built_in">size</span>() == <span class="hljs-number">1</span> &amp;&amp; digits[<span class="hljs-number">0</span>] == <span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 比较两个大整数的大小</span><br>    <span class="hljs-type">bool</span> <span class="hljs-keyword">operator</span>&lt;(<span class="hljs-type">const</span> BigInteger &amp;other) <span class="hljs-type">const</span> &#123;<br>        <span class="hljs-keyword">if</span> (digits.<span class="hljs-built_in">size</span>() &lt; other.digits.<span class="hljs-built_in">size</span>()) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">if</span> (digits.<span class="hljs-built_in">size</span>() &gt; other.digits.<span class="hljs-built_in">size</span>()) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = digits.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>            <span class="hljs-keyword">if</span> (digits[i] &lt; other.digits[i]) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            <span class="hljs-keyword">if</span> (digits[i] &gt; other.digits[i]) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;;<br><br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BC%96%E7%A8%8B-c/" class="print-no-link">#编程|c++</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>在c++中实现高精度</div>
+      <div>http://qyc233.eu.org/2023/11/27/在c-中实现高精度/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>邱雨晨</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/20/%E5%85%B3%E4%BA%8E%E5%B9%BF%E5%B7%9E%E5%B8%82%E7%95%AA%E7%A6%BA%E5%8C%BA2024%E4%B9%9D%E4%B8%8A%E6%95%B0%E5%AD%A6%E6%9C%9F%E6%9C%AB%E8%80%8324%E7%9A%84%E8%A7%A3%E6%9E%90/" title="关于广州市番禺区2024九上数学期末考24的解析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于广州市番禺区2024九上数学期末考24的解析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
